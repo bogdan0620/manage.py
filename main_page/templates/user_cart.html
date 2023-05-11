@@ -1,1 +1,76 @@
-<!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <title>Корзина</title></head><body>{% for user_cart in cart %}  Название: {{ user_cart.user_product }}<br>  Количество: {{ user_cart.user_product_quantity }} шт<br>  Цена товара в количестве {{ user_cart.user_product_quantity }} шт: {{ user_cart.total_for_product }} сум<br><br>{% endfor %}<form action="/order" method="post">    {% csrf_token %}    <button onclick="confirm()">Оформить заказ</button></form><script>    function confirm(){        alert('Подтверждаете заказ?')    }</script></body></html>
+{% extends 'index.html' %}
+
+
+
+{% block content %}
+	<section id="cart_items">
+		<div class="container">
+			<div class="breadcrumbs">
+				<ol class="breadcrumb">
+				  <li><a href="/">Дом</a></li>
+				  <li class="active">Корзина</li>
+				</ol>
+			</div>
+			<div class="table-responsive cart_info">
+				<table class="table table-condensed">
+					<thead>
+						<tr class="cart_menu">
+							<td class="description">Название</td>
+							<td class="price">Цена</td>
+							<td class="quantity">Количество</td>
+							<td class="total">Итого</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+					{% for i in cart %}
+						<tr>
+							<td class="cart_description">
+								<h4><a href="/item/{{ i.user_product.id }}">{{ i.user_product }}</a></h4>
+							</td>
+							<td class="cart_price">
+								<h4>{{ i.user_product.product_price }} сум</h4>
+							</td>
+							<td class="cart_quantity">
+								<h4>{{ i.user_product_quantity }}</h4>
+							</td>
+							<td class="cart_total">
+								<h4>{{ i.total_for_product }} сум</h4>
+							</td>
+<!--							<td class="cart_delete">-->
+<!--								<form action="/del_item/{{ i.product.id }}" method="post">-->
+<!--									{% csrf_token %}-->
+<!--									<button><i class="fa fa-times"></i></button>-->
+<!--								</form>-->
+<!--							</td>-->
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section> <!--/#cart_items-->
+
+	<section id="do_action">
+		<div class="container">
+			<div class="heading">
+				<h3>Что делаем дальше?</h3>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="total_area">
+						<ul>
+							<li>Общая цена: <span>{{ total }} сум</span></li>
+							<li>Доставка: <span>Бесплатно</span></li>
+							<li>Общая цена с учетом доставки: <span>{{ total }} сум</span></li>
+						</ul>
+							<form method="POST" action="/order">
+								{% csrf_token %}
+								<button>Оформить заказ</button>
+							</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section><!--/#do_action-->
+{% endblock content %}
